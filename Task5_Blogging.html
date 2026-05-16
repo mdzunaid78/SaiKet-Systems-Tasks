@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>InsightEngine — Where good ideas find you</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Georgia&family=Sohne:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #ffffff;
+    --bg-secondary: #f9f9f9;
+    --bg-hover: #f2f2f2;
+    --text: #242424;
+    --text-muted: #6b6b6b;
+    --text-hint: #9b9b9b;
+    --border: #e6e6e6;
+    --green: #1a8917;
+    --green-dark: #0f730c;
+    --star: #c57200;
+    --member-bg: #ffc017;
+  }
+
+  body {
+    font-family: 'Georgia', Georgia, serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 16px;
+    line-height: 1.6;
+  }
+
+  /* ── TOPBAR ── */
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 57px;
+    padding: 0 24px;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    background: var(--bg);
+    z-index: 100;
+  }
+  .topbar-left { display: flex; align-items: center; gap: 20px; }
+  .logo {
+    font-family: 'Georgia', Georgia, serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -0.5px;
+    text-decoration: none;
+  }
+  .search-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--bg-secondary);
+    border-radius: 999px;
+    padding: 8px 16px;
+    border: 1px solid var(--border);
+  }
+  .search-wrap svg { color: var(--text-hint); flex-shrink: 0; }
+  .search-wrap input {
+    border: none;
+    background: transparent;
+    font-size: 14px;
+    color: var(--text);
+    outline: none;
+    width: 200px;
+    font-family: 'Georgia', serif;
+  }
+  .search-wrap input::placeholder { color: var(--text-hint); }
+
+  .topbar-right { display: flex; align-items: center; gap: 18px; }
+  .write-btn {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 14px;
+    color: var(--text-muted);
+    cursor: pointer;
+    background: none;
+    border: none;
+    font-family: 'Georgia', serif;
+    padding: 0;
+  }
+  .write-btn:hover { color: var(--text); }
+  .get-started-btn {
+    background: var(--text);
+    color: var(--bg);
+    border: none;
+    border-radius: 999px;
+    padding: 9px 20px;
+    font-size: 14px;
+    cursor: pointer;
+    font-family: 'Georgia', serif;
+    transition: background 0.15s;
+  }
+  .get-started-btn:hover { background: #3d3d3d; }
+  .avatar-circle {
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    background: #1a8917;
+    color: white;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: sans-serif;
+    flex-shrink: 0;
+  }
+  .icon-btn {
+    background: none; border: none;
+    cursor: pointer; padding: 4px;
+    color: var(--text-muted);
+    display: flex; align-items: center;
+  }
+  .icon-btn:hover { color: var(--text); }
+
+  /* ── LAYOUT ── */
+  .layout {
+    display: grid;
+    grid-template-columns: minmax(0,1fr) 340px;
+    max-width: 1192px;
+    margin: 0 auto;
+    padding: 0 24px;
+    gap: 0;
+  }
+  .feed-col { border-right: 1px solid var(--border); padding-right: 36px; min-width: 0; }
+  .sidebar-col { padding-left: 36px; }
+
+  /* ── TABS ── */
+  .tabs {
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 0;
+    padding-top: 14px;
+    overflow-x: auto;
+  }
+  .tab {
+    font-size: 14px;
+    padding: 10px 16px 10px 0;
+    cursor: pointer;
+    color: var(--text-hint);
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    white-space: nowrap;
+    background: none;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    font-family: 'Georgia', serif;
+    transition: color 0.1s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .tab-icon {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--border);
+    flex-shrink: 0;
+    transition: background 0.1s;
+  }
+  .tab.active .tab-icon {
+    background: var(--text);
+  }
+  .tab.active { color: var(--text); border-bottom: 2px solid var(--text); }
+  .tab:hover:not(.active) { color: var(--text-muted); }
+
+  /* ── ARTICLES ── */
+  .article {
+    display: grid;
+    grid-template-columns: 1fr 112px;
+    gap: 16px;
+    align-items: start;
+    padding: 24px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .article:last-child { border-bottom: none; }
+  .pub-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 10px;
+  }
+  .pub-icon {
+    width: 20px; height: 20px;
+    border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px;
+    font-weight: 700;
+    font-family: sans-serif;
+    flex-shrink: 0;
+  }
+  .pub-text { font-size: 13px; color: var(--text-muted); font-family: sans-serif; }
+  .pub-text b { font-weight: 500; color: var(--text); }
+  .art-title {
+    font-size: 19px;
+    font-weight: 700;
+    line-height: 1.3;
+    color: var(--text);
+    margin-bottom: 7px;
+    cursor: pointer;
+  }
+  .art-title:hover { opacity: 0.8; }
+  .art-sub {
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.5;
+    margin-bottom: 12px;
+    font-family: sans-serif;
+  }
+  .art-footer {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    flex-wrap: wrap;
+    font-size: 13px;
+    color: var(--text-hint);
+    font-family: sans-serif;
+  }
+  .member-star { color: var(--star); margin-right: 6px; }
+  .art-stat {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-right: 12px;
+  }
+  .art-actions {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .art-thumb {
+    width: 112px; height: 84px;
+    background: var(--bg-secondary);
+    border-radius: 3px;
+    border: 1px solid var(--border);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-hint);
+    font-size: 28px;
+  }
+
+  /* ── COMPOSE OVERLAY ── */
+  .compose-overlay {
+    display: none;
+    position: fixed;
+    top: 57px; left: 0; right: 0; bottom: 0;
+    background: var(--bg);
+    z-index: 200;
+    overflow-y: auto;
+  }
+  .compose-overlay.open { display: block; }
+  .compose-inner {
+    max-width: 740px;
+    margin: 0 auto;
+    padding: 32px 24px 60px;
+  }
+  .compose-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 28px;
+  }
+  .compose-bar-left { display: flex; align-items: center; gap: 12px; }
+  .publish-btn {
+    background: var(--green);
+    color: white;
+    border: none;
+    border-radius: 999px;
+    padding: 8px 20px;
+    font-size: 14px;
+    cursor: pointer;
+    font-family: sans-serif;
+    transition: background 0.15s;
+  }
+  .publish-btn:hover { background: var(--green-dark); }
+  .save-draft-btn {
+    background: none;
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 8px 18px;
+    font-size: 14px;
+    cursor: pointer;
+    font-family: sans-serif;
+  }
+  .save-draft-btn:hover { background: var(--bg-secondary); }
+  .close-compose {
+    background: none; border: none;
+    font-size: 22px; cursor: pointer;
+    color: var(--text-muted);
+    display: flex; align-items: center;
+  }
+  .compose-title-input {
+    width: 100%;
+    border: none;
+    outline: none;
+    font-family: 'Georgia', Georgia, serif;
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.2;
+    margin-bottom: 16px;
+    resize: none;
+    background: transparent;
+  }
+  .compose-title-input::placeholder { color: #d0d0d0; }
+  .compose-body-input {
+    width: 100%;
+    border: none;
+    outline: none;
+    font-family: 'Georgia', Georgia, serif;
+    font-size: 20px;
+    color: var(--text);
+    line-height: 1.7;
+    resize: none;
+    min-height: 300px;
+    background: transparent;
+  }
+  .compose-body-input::placeholder { color: #d0d0d0; }
+  .compose-divider { border: none; border-top: 1px solid var(--border); margin: 16px 0; }
+  .word-count { font-size: 13px; color: var(--text-hint); font-family: sans-serif; margin-top: 8px; }
+
+  /* ── SIDEBAR ── */
+  .sidebar-section { padding: 24px 0; border-bottom: 1px solid var(--border); }
+  .sidebar-section:last-child { border-bottom: none; }
+  .sidebar-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 16px;
+    font-family: sans-serif;
+  }
+  .staff-item { margin-bottom: 18px; }
+  .staff-item:last-of-type { margin-bottom: 0; }
+  .staff-author {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 5px;
+  }
+  .staff-av {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 9px;
+    font-weight: 700;
+    font-family: sans-serif;
+    flex-shrink: 0;
+  }
+  .staff-author-name { font-size: 13px; color: var(--text-muted); font-family: sans-serif; }
+  .staff-post-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.3;
+    margin-bottom: 3px;
+    cursor: pointer;
+  }
+  .staff-post-title:hover { opacity: 0.75; }
+  .staff-date { font-size: 12px; color: var(--text-hint); font-family: sans-serif; }
+  .see-full-list {
+    font-size: 13px;
+    color: var(--green);
+    cursor: pointer;
+    background: none;
+    border: none;
+    font-family: sans-serif;
+    padding: 0;
+    margin-top: 10px;
+    display: block;
+  }
+  .see-full-list:hover { color: var(--green-dark); }
+  .topics-wrap { display: flex; flex-wrap: wrap; gap: 8px; }
+  .topic-pill {
+    font-size: 13px;
+    color: var(--text-muted);
+    background: var(--bg-secondary);
+    border-radius: 999px;
+    padding: 6px 16px;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    font-family: sans-serif;
+    transition: background 0.12s;
+  }
+  .topic-pill:hover { background: var(--bg-hover); }
+
+  .compose-img-upload {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+  .img-upload-btn {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    background: none;
+    border: 1px dashed var(--border);
+    border-radius: 8px;
+    padding: 9px 18px;
+    font-size: 13px;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-family: sans-serif;
+    transition: border-color 0.15s, color 0.15s;
+  }
+  .img-upload-btn:hover { border-color: var(--text-muted); color: var(--text); }
+  .cover-preview {
+    display: none;
+    position: relative;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .cover-preview img {
+    width: 100%;
+    max-height: 280px;
+    object-fit: cover;
+    display: block;
+  }
+  .cover-remove {
+    position: absolute;
+    top: 10px; right: 10px;
+    background: rgba(0,0,0,0.55);
+    color: white;
+    border: none;
+    border-radius: 999px;
+    width: 30px; height: 30px;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .art-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; border-radius: 3px; }
+  .empty-state {
+    padding: 48px 0;
+    text-align: center;
+    color: var(--text-hint);
+    font-family: sans-serif;
+    font-size: 15px;
+  }
+
+  /* ── TOAST ── */
+  .toast {
+    position: fixed;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%) translateY(60px);
+    background: var(--text);
+    color: var(--bg);
+    padding: 10px 22px;
+    border-radius: 999px;
+    font-size: 14px;
+    font-family: sans-serif;
+    opacity: 0;
+    transition: all 0.3s ease;
+    z-index: 999;
+    pointer-events: none;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    .layout { grid-template-columns: 1fr; padding: 0 16px; }
+    .feed-col { border-right: none; padding-right: 0; }
+    .sidebar-col { display: none; }
+    .search-wrap input { width: 120px; }
+    .logo { font-size: 24px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <div class="topbar-left">
+    <a class="logo" href="https://insightengine.com" style="display:flex;align-items:center;gap:6px;">
+      <img src="https://picsum.photos/seed/ie/32/32" style="border-radius:4px;" alt="IE" />
+      IE
+    </a>
+    <div class="search-wrap">
+      <svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="text" id="search-input" placeholder="Search" oninput="filterFeed()" />
+    </div>
+  </div>
+  <div class="topbar-right">
+    <button class="write-btn" onclick="openCompose()">
+      <svg width="17" height="17" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+      Write
+    </button>
+    <button class="icon-btn" title="Notifications">
+      <svg width="19" height="19" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+    </button>
+    <div class="avatar-circle">MZ</div>
+  </div>
+</header>
+
+<!-- COMPOSE OVERLAY -->
+<div class="compose-overlay" id="compose-overlay">
+  <div class="compose-inner">
+    <div class="compose-bar">
+      <div class="compose-bar-left">
+        <button class="publish-btn" onclick="publishStory()">Publish</button>
+        <button class="save-draft-btn" onclick="saveDraft()">Save draft</button>
+      </div>
+      <button class="close-compose" onclick="closeCompose()" title="Close">&#x2715;</button>
+    </div>
+    <hr class="compose-divider">
+    <div class="cover-preview" id="cover-preview">
+      <img id="cover-img" src="" alt="Cover image" />
+      <button class="cover-remove" onclick="removeCover()" title="Remove image">&#x2715;</button>
+    </div>
+    <div class="compose-img-upload">
+      <button class="img-upload-btn" onclick="document.getElementById('img-file-input').click()">
+        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        Add cover image
+      </button>
+      <span style="font-size:12px;color:var(--text-hint);font-family:sans-serif;" id="img-hint">JPG, PNG, GIF supported</span>
+      <input type="file" id="img-file-input" accept="image/*" style="display:none;" onchange="handleImageUpload(event)" />
+    </div>
+    <textarea id="compose-title" class="compose-title-input" rows="2" placeholder="Title"></textarea>
+    <textarea id="compose-body" class="compose-body-input" placeholder="Tell your story..." oninput="updateWordCount()"></textarea>
+    <p class="word-count" id="word-count">0 words</p>
+  </div>
+</div>
+
+<!-- MAIN LAYOUT -->
+<div class="layout">
+  <!-- FEED -->
+  <div class="feed-col">
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('for-you', this)"><span class="tab-icon"></span>For you</button>
+      <button class="tab" onclick="switchTab('featured', this)"><span class="tab-icon"></span>Featured</button>
+      <button class="tab" onclick="switchTab('following', this)"><span class="tab-icon"></span>Following</button>
+    </div>
+    <div id="articles-feed"></div>
+  </div>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar-col">
+    <div class="sidebar-section">
+      <div class="sidebar-title">Staff picks</div>
+
+      <div class="staff-item">
+        <div class="staff-author">
+          <div class="staff-av" style="background:#ffecd1;color:#7a4300;">FS</div>
+          <span class="staff-author-name">Faye Seidler</span>
+        </div>
+        <div class="staff-post-title">I Never Thought I'd Get Old Enough to Wipe the Dust Off a PS2</div>
+        <div class="staff-date">May 6</div>
+      </div>
+
+      <div class="staff-item">
+        <div class="staff-author">
+          <div class="staff-av" style="background:#d4f0e2;color:#0a5c37;">EJ</div>
+          <span class="staff-author-name">Eason Jordan</span>
+        </div>
+        <div class="staff-post-title">My Time with Ted</div>
+        <div class="staff-date">May 6</div>
+      </div>
+
+      <div class="staff-item">
+        <div class="staff-author">
+          <div class="staff-av" style="background:#e5e0f8;color:#3b2a8a;">PC</div>
+          <span class="staff-author-name">Pete Cripps</span>
+        </div>
+        <div class="staff-post-title">What 50 Years of Photography Has Taught Me About Seeing</div>
+        <div class="staff-date">Apr 4</div>
+      </div>
+
+      <button class="see-full-list">See the full list</button>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-title">Recommended topics</div>
+      <div class="topics-wrap">
+        <div class="topic-pill">Programming</div>
+        <div class="topic-pill">Writing</div>
+        <div class="topic-pill">Data Science</div>
+        <div class="topic-pill">Relationships</div>
+        <div class="topic-pill">Self-improvement</div>
+        <div class="topic-pill">Technology</div>
+        <div class="topic-pill">Productivity</div>
+        <div class="topic-pill">Health</div>
+      </div>
+    </div>
+  </aside>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+  const DB = {
+    "for-you": [
+      { pub:"PG", pubName:"Personal Growth", author:"Thomas Oppong", date:"Feb 23", title:"Careers Are Collapsing. Jobs Are Dying. The Smartest People Are Doing This Right Now", sub:'"Earn with your mind, not your time." — Naval', claps:"14K", comments:"407", member:true, iconBg:"#e8f4fd", iconColor:"#1a6fa8", img:"" },
+      { pub:"WC", pubName:"Write A Catalyst", author:"The Curious Finance Girl", date:"Mar 15", title:"The Last Time This Happened, Lots of Regular People Became Millionaires", sub:"How a historic wave of money is about to change everything", claps:"3.8K", comments:"127", member:true, iconBg:"#d4f0e2", iconColor:"#0a5c37", img:"" },
+      { pub:"DS", pubName:"Data Science Collective", author:"Anubhav", date:"Apr 16", title:"Why Every Data Scientist Should Learn SQL Before Python", sub:"The foundations matter more than the frameworks.", claps:"2.1K", comments:"89", member:false, iconBg:"#fff3e0", iconColor:"#b45309", img:"" },
+      { pub:"LC", pubName:"Level Up Coding", author:"Sarah Chen", date:"May 1", title:"10 JavaScript Tricks That Will Make You a Better Developer", sub:"From closures to async/await — the patterns pros actually use.", claps:"5.6K", comments:"203", member:true, iconBg:"#ede9fe", iconColor:"#4c1d95", img:"" },
+      { pub:"IE", pubName:"InsightEngine Blog", author:"IE Team", date:"May 8", title:"A Better Way to Discover Stories You'll Love", sub:"Introducing smarter recommendations powered by your reading history.", claps:"8.9K", comments:"441", member:false, iconBg:"#f1f5f9", iconColor:"#334155", img:"" },
+      { pub:"ML", pubName:"Mind & Life", author:"Dr. Ayesha Kapoor", date:"May 9", title:"The Science of Deep Work: How to Reclaim Your Focus in a Distracted World", sub:"Your brain is not broken. The environment is. Here's how to fix it.", claps:"11.2K", comments:"538", member:true, iconBg:"#fce4ec", iconColor:"#880e4f", img:"" },
+      { pub:"TF", pubName:"The Future", author:"James Okafor", date:"May 11", title:"AI Is Not Coming for Your Job — It's Coming for Your Skill Set", sub:"The real disruption isn't automation. It's the redefinition of expertise.", claps:"19.4K", comments:"712", member:true, iconBg:"#e3f2fd", iconColor:"#0d47a1", img:"" },
+      { pub:"HW", pubName:"Health & Wellness", author:"Priya Mehta", date:"May 13", title:"Why You're Always Tired (And It's Not Sleep Deprivation)", sub:"Three overlooked reasons your energy tanks — and how to fix each one.", claps:"6.7K", comments:"289", member:false, iconBg:"#e8f5e9", iconColor:"#1b5e20", img:"" },
+      { pub:"PS", pubName:"Psychology Today", author:"Dr. Nina Patel", date:"May 2", title:"The Habit Loop That's Keeping You Stuck — And How to Break It", sub:"Why willpower isn't the answer, and what neuroscience says actually works.", claps:"9.3K", comments:"374", member:true, iconBg:"#fce4ec", iconColor:"#880e4f", img:"" },
+      { pub:"TR", pubName:"Tech Review", author:"Marcus Blaine", date:"Apr 29", title:"The Browser Wars Are Back — And This Time, AI Is the Battlefield", sub:"Chrome, Edge, and Arc are all racing to embed AI. Here's who's winning.", claps:"7.1K", comments:"265", member:false, iconBg:"#e3f2fd", iconColor:"#0d47a1", img:"" },
+      { pub:"FN", pubName:"Finance Now", author:"Lena Fischer", date:"Apr 25", title:"Index Funds Made Me Richer Than Stock Picking Ever Did", sub:"The boring truth about wealth building that nobody wants to hear.", claps:"12.4K", comments:"489", member:true, iconBg:"#fff3e0", iconColor:"#b45309", img:"" },
+      { pub:"CL", pubName:"Clean Living", author:"Akira Tanaka", date:"Apr 22", title:"I Deleted Social Media for 90 Days. Here's What Actually Changed.", sub:"Spoiler: It wasn't what I expected. Some things got better. Some got worse.", claps:"18.7K", comments:"831", member:true, iconBg:"#e8f5e9", iconColor:"#1b5e20", img:"" },
+      { pub:"RM", pubName:"Remote Work Hub", author:"Danielle Torres", date:"Apr 20", title:"The Remote Work Myth: Why Most People Are Less Productive at Home", sub:"And the three things that actually make distributed teams thrive.", claps:"5.2K", comments:"317", member:false, iconBg:"#f1f5f9", iconColor:"#334155", img:"" },
+      { pub:"CE", pubName:"Career Essentials", author:"Joshua Park", date:"Apr 18", title:"How to Negotiate a 30% Raise Without Ruining the Relationship", sub:"Scripts, timing, and the psychology of salary conversations.", claps:"23.1K", comments:"952", member:true, iconBg:"#e8f4fd", iconColor:"#1a6fa8", img:"" },
+      { pub:"NT", pubName:"Neuroscience Today", author:"Prof. Elena Vasquez", date:"Apr 15", title:"Your Brain on Multitasking: The Cognitive Cost Nobody Talks About", sub:"Every context switch costs you 23 minutes of peak focus. Here's the math.", claps:"8.4K", comments:"302", member:true, iconBg:"#ede9fe", iconColor:"#4c1d95", img:"" },
+      { pub:"CK", pubName:"Cooking & Culture", author:"Yusuf Abubakar", date:"Apr 12", title:"Why the Best Chefs in the World All Read the Same 3 Books", sub:"The secret curriculum of culinary excellence has nothing to do with recipes.", claps:"4.1K", comments:"178", member:false, iconBg:"#d4f0e2", iconColor:"#0a5c37", img:"" },
+      { pub:"SP", pubName:"Space & Science", author:"Dr. Mia Kowalski", date:"Apr 9", title:"We Found Water on Two More Moons. What That Means for Life in the Universe.", sub:"The implications are staggering — and they're being massively underreported.", claps:"31.2K", comments:"1.4K", member:true, iconBg:"#e3f2fd", iconColor:"#0d47a1", img:"" },
+      { pub:"WR", pubName:"Writer's Room", author:"Amara Diallo", date:"Apr 7", title:"The One Writing Habit That Separates Good Writers from Great Ones", sub:"It has nothing to do with grammar, vocabulary, or even practice.", claps:"15.6K", comments:"628", member:true, iconBg:"#fce4ec", iconColor:"#880e4f", img:"" },
+      { pub:"ED", pubName:"EdTech Insights", author:"Tariq Mansoor", date:"Apr 4", title:"Traditional Degrees Are Losing Value Faster Than Anyone Admits", sub:"What the data actually says about ROI on higher education in 2025.", claps:"27.9K", comments:"1.1K", member:true, iconBg:"#ffecd1", iconColor:"#7a4300", img:"" },
+      { pub:"GR", pubName:"Green Future", author:"Ingrid Sorensen", date:"Apr 1", title:"The Carbon Capture Startup That Could Actually Change Everything", sub:"It sounds too good to be true. The science suggests otherwise.", claps:"6.3K", comments:"241", member:false, iconBg:"#e8f5e9", iconColor:"#1b5e20", img:"" },
+      { pub:"MH", pubName:"Mental Health Matters", author:"Dr. Kenji Watanabe", date:"Mar 29", title:"Therapy Taught Me This About Anxiety That No Self-Help Book Ever Did", sub:"The uncomfortable truth about what healing actually requires.", claps:"44.2K", comments:"2.1K", member:true, iconBg:"#d4f0e2", iconColor:"#0a5c37", img:"" },
+      { pub:"CY", pubName:"Cybersecurity Now", author:"Fatima Al-Rashid", date:"Mar 26", title:"Your Password Manager Has Been Lying to You", sub:"A security researcher breaks down what real protection actually looks like.", claps:"9.8K", comments:"423", member:false, iconBg:"#f1f5f9", iconColor:"#334155", img:"" },
+      { pub:"PH", pubName:"Philosophy Now", author:"Prof. Luca Ricci", date:"Mar 23", title:"Stoicism Is Being Sold as a Productivity Hack. That's a Tragedy.", sub:"The ancient philosophy of resilience was never about optimizing output.", claps:"16.7K", comments:"714", member:true, iconBg:"#ede9fe", iconColor:"#4c1d95", img:"" },
+      { pub:"BK", pubName:"Book Bytes", author:"Simone Adeyemi", date:"Mar 20", title:"I Read 52 Books Last Year. Only 4 Were Worth Your Time.", sub:"An honest review of what actually changed my thinking — and what was just hype.", claps:"11.3K", comments:"502", member:true, iconBg:"#fff3e0", iconColor:"#b45309", img:"" },
+      { pub:"AR", pubName:"Architecture & Design", author:"Priya Sundaram", date:"Mar 17", title:"Why the Most Beautiful Buildings in the World Follow One Rule", sub:"The golden ratio is just the beginning. Here's the deeper geometry of beauty.", claps:"7.2K", comments:"284", member:false, iconBg:"#fce4ec", iconColor:"#880e4f", img:"" },
+      { pub:"CR", pubName:"Crypto Realist", author:"Dmitri Volkov", date:"Mar 14", title:"I Lost Everything in Crypto. Here's What I Wish I'd Known.", sub:"Not a cautionary tale. A precise map of where the traps are buried.", claps:"38.5K", comments:"1.8K", member:true, iconBg:"#e8f4fd", iconColor:"#1a6fa8", img:"" },
+      { pub:"SL", pubName:"Sleep Science", author:"Dr. Yara Hassan", date:"Mar 11", title:"The 8-Hour Sleep Rule Is Wrong. Here's the Research.", sub:"What chronobiology actually tells us about optimal rest for different people.", claps:"14.1K", comments:"561", member:true, iconBg:"#e3f2fd", iconColor:"#0d47a1", img:"" },
+      { pub:"FP", pubName:"Film & Philosophy", author:"Marcus Wei", date:"Mar 8", title:"Why Christopher Nolan's Films Are Actually About One Thing", sub:"A close reading of every film reveals a single obsession — and it's not time.", claps:"19.8K", comments:"847", member:true, iconBg:"#ffecd1", iconColor:"#7a4300", img:"" },
+      { pub:"GL", pubName:"Global Lens", author:"Amina Ouedraogo", date:"Mar 5", title:"The Country That Solved Loneliness — And What the West Refuses to Learn", sub:"Decades of research on social connection point to one radical conclusion.", claps:"22.4K", comments:"934", member:true, iconBg:"#d4f0e2", iconColor:"#0a5c37", img:"" },
+      { pub:"PM", pubName:"Product Minds", author:"Kiran Reddy", date:"Mar 2", title:"The Feature Nobody Wanted That Saved Our Startup", sub:"Sometimes the best product decisions come from ignoring your users.", claps:"8.7K", comments:"331", member:false, iconBg:"#ede9fe", iconColor:"#4c1d95", img:"" },
+      { pub:"EV", pubName:"EV Revolution", author:"Tobias Kraft", date:"Feb 28", title:"Electric Cars Aren't the Answer. Here's What Actually Is.", sub:"The uncomfortable math behind clean transportation that the industry won't publish.", claps:"25.3K", comments:"1.2K", member:true, iconBg:"#e8f5e9", iconColor:"#1b5e20", img:"" },
+      { pub:"LN", pubName:"Language & Mind", author:"Dr. Sofia Petrov", date:"Feb 25", title:"Learning a Second Language Changes Your Brain in Ways Scientists Didn't Expect", sub:"New fMRI studies reveal a structural transformation that goes far beyond communication.", claps:"10.2K", comments:"398", member:true, iconBg:"#fce4ec", iconColor:"#880e4f", img:"" },
+      { pub:"HR", pubName:"Human Resources Today", author:"Jennifer O'Neill", date:"Feb 20", title:"The One Interview Question That Reveals Everything About a Candidate", sub:"And the answers that consistently predict top performers.", claps:"33.6K", comments:"1.5K", member:true, iconBg:"#e8f4fd", iconColor:"#1a6fa8", img:"" },
+      { pub:"GA", pubName:"Game Analysis", author:"Yuki Tanaka", date:"Feb 17", title:"What the World's Best Chess Players Can Teach You About Decision-Making", sub:"Pattern recognition, risk tolerance, and the psychology of playing under pressure.", claps:"6.9K", comments:"256", member:false, iconBg:"#f1f5f9", iconColor:"#334155", img:"" },
+      { pub:"RB", pubName:"Robotics Brief", author:"Dr. Amara Singh", date:"Feb 14", title:"The Robot That Can Feel Pain — And Why That's Both Remarkable and Terrifying", sub:"New haptic feedback systems are forcing ethicists to ask questions nobody is ready for.", claps:"41.7K", comments:"2.3K", member:true, iconBg:"#fff3e0", iconColor:"#b45309", img:"" },
+      { pub:"TW", pubName:"Travel Wise", author:"Claudia Hernandez", date:"Feb 11", title:"I Visited 47 Countries. These 6 Completely Changed How I See the World.", sub:"Not the ones you'd expect. Not the ones that made the list.", claps:"29.4K", comments:"1.1K", member:true, iconBg:"#ffecd1", iconColor:"#7a4300", img:"" },
+      { pub:"SC", pubName:"Startup Chronicles", author:"Vikram Nair", date:"Feb 8", title:"We Had 3 Million Users and Zero Revenue. Here's How We Fixed It.", sub:"The pivot story nobody writes about because it was boring and it worked.", claps:"17.2K", comments:"689", member:true, iconBg:"#e8f5e9", iconColor:"#1b5e20", img:"" },
+      { pub:"NR", pubName:"Nutrition Research", author:"Dr. Alicia Gomez", date:"Feb 5", title:"Ultra-Processed Foods Aren't Just Bad for Your Body — They're Reshaping Your Mind", sub:"New long-term studies reveal cognitive effects that go far beyond weight gain.", claps:"13.5K", comments:"547", member:true, iconBg:"#d4f0e2", iconColor:"#0a5c37", img:"" },
+      { pub:"CC", pubName:"Climate Chronicles", author:"Ben Nakamura", date:"Feb 2", title:"The Arctic Is Warming 4x Faster Than the Rest of the Planet. Here's What That Means.", sub:"A climate scientist explains the feedback loops that keep him up at night.", claps:"20.1K", comments:"876", member:true, iconBg:"#e3f2fd", iconColor:"#0d47a1", img:"" },
+      { pub:"MU", pubName:"Music & Mind", author:"Zara Ahmed", date:"Jan 29", title:"Why Sad Music Makes Us Feel Better — The Neuroscience of Musical Catharsis", sub:"New research finally explains why we reach for heartbreak playlists when we're heartbroken.", claps:"11.8K", comments:"432", member:false, iconBg:"#ede9fe", iconColor:"#4c1d95", img:"" },
+      { pub:"LG", pubName:"Leadership Gazette", author:"Patrick O'Brien", date:"Jan 26", title:"The Leadership Style That Consistently Produces the Highest Performing Teams", sub:"It's not charisma. It's not authority. It's something most leaders actively avoid.", claps:"24.7K", comments:"1.0K", member:true, iconBg:"#e8f4fd", iconColor:"#1a6fa8", img:"" },
+      { pub:"BT", pubName:"Biotech Briefing", author:"Dr. Reena Gupta", date:"Jan 23", title:"The Gene Therapy That Reversed Aging in Mice — And What It Means for Humans", sub:"We're not as far from clinical trials as you think. The timeline is accelerating.", claps:"35.9K", comments:"1.7K", member:true, iconBg:"#fce4ec", iconColor:"#880e4f", img:"" },
+      { pub:"UR", pubName:"Urban Review", author:"Sebastien Laurent", date:"Jan 20", title:"Why the Most Livable Cities in the World Share One Design Principle", sub:"It's not parks, transit, or density. It's something far more fundamental.", claps:"9.4K", comments:"367", member:false, iconBg:"#ffecd1", iconColor:"#7a4300", img:"" },
+      { pub:"QT", pubName:"Quantum Tech", author:"Dr. Hui Zhang", date:"Jan 17", title:"Quantum Computing Just Achieved Something That Changes Everything", sub:"The technical milestone that most tech journalists are misunderstanding completely.", claps:"28.3K", comments:"1.3K", member:true, iconBg:"#f1f5f9", iconColor:"#334155", img:"" },
+      { pub:"WB", pubName:"Wellbeing Weekly", author:"Nadia Okonkwo", date:"Jan 14", title:"The Morning Routine of 200 High Performers Has One Surprising Thing in Common", sub:"It's not journaling, cold showers, or meditation. It's something almost embarrassingly simple.", claps:"16.4K", comments:"723", member:true, iconBg:"#e8f5e9", iconColor:"#1b5e20", img:"" },
+    ],
+    "featured": [
+      { pub:"SS", pubName:"Startup Stash", author:"Rick Hanson", date:"May 3", title:"The Startup Playbook Nobody Talks About", sub:"Why the boring stuff separates winners from everyone else.", claps:"8.2K", comments:"312", member:true, iconBg:"#ffecd1", iconColor:"#7a4300", img:"" },
+      { pub:"IH", pubName:"Investor's Handbook", author:"Priya Nair", date:"May 10", title:"What the Fed's Decision Means for Your Portfolio", sub:"Breaking down the signals that matter and the noise that doesn't.", claps:"4.4K", comments:"156", member:true, iconBg:"#e8f4fd", iconColor:"#1a6fa8", img:"" },
+      { pub:"EN", pubName:"Entrepreneurship", author:"Liu Wei", date:"Apr 28", title:"I Bootstrapped to $1M ARR Working 4 Hours a Day", sub:"The systems I used, the mistakes I made, and what I'd do differently.", claps:"22K", comments:"874", member:true, iconBg:"#d4f0e2", iconColor:"#0a5c37", img:"" },
+      { pub:"VC", pubName:"VC Insider", author:"Sofia Reyes", date:"May 5", title:"What VCs Actually Look for in a Pitch Deck (From Someone Who Reviews 500 a Year)", sub:"Spoiler: It's not what most founders think.", claps:"17.3K", comments:"603", member:true, iconBg:"#fce4ec", iconColor:"#880e4f", img:"" },
+      { pub:"PR", pubName:"Product Thinking", author:"Arjun Bose", date:"May 7", title:"The Best Product Managers I Know Do This One Thing Differently", sub:"They don't just manage products. They manage clarity.", claps:"9.1K", comments:"347", member:false, iconBg:"#ede9fe", iconColor:"#4c1d95", img:"" },
+      { pub:"DE", pubName:"Design Ethics", author:"Nora Lindqvist", date:"May 12", title:"Dark Patterns Are Everywhere — And We Need to Talk About It", sub:"From deceptive defaults to manipulative interfaces, UX has a problem.", claps:"13.8K", comments:"492", member:true, iconBg:"#fff3e0", iconColor:"#b45309", img:"" },
+      { pub:"GF", pubName:"Growth Files", author:"Alexei Morozov", date:"May 1", title:"How We Grew from 0 to 100K Users Without Spending a Dollar on Ads", sub:"The exact channels, content formats, and timing that actually moved the needle.", claps:"31.4K", comments:"1.2K", member:true, iconBg:"#e8f4fd", iconColor:"#1a6fa8", img:"" },
+      { pub:"BR", pubName:"Brand Republic", author:"Chioma Eze", date:"Apr 30", title:"The Brand Strategy Behind the World's Most Loved Companies", sub:"It's not about logos. It's not about color. It's about one thing done obsessively.", claps:"14.2K", comments:"538", member:true, iconBg:"#fce4ec", iconColor:"#880e4f", img:"" },
+      { pub:"UX", pubName:"UX Collective", author:"Hana Kovacs", date:"Apr 27", title:"The UX Principle That Increased Our Conversion Rate by 47%", sub:"It violates every conventional wisdom about user onboarding. It works anyway.", claps:"19.7K", comments:"741", member:true, iconBg:"#ede9fe", iconColor:"#4c1d95", img:"" },
+      { pub:"SM", pubName:"SaaS Monthly", author:"Derek Osei", date:"Apr 24", title:"Why 90% of SaaS Companies Fail at Customer Retention — And the Fix Is Obvious", sub:"Churn is a product problem, not a sales problem. Here's the proof.", claps:"11.6K", comments:"429", member:false, iconBg:"#d4f0e2", iconColor:"#0a5c37", img:"" },
+      { pub:"CF", pubName:"Crypto Finance", author:"Yuki Nakamura", date:"Apr 21", title:"DeFi Is Not Dead. It Just Got Boring — And That's a Good Sign.", sub:"What the maturation of decentralized finance actually looks like from the inside.", claps:"7.3K", comments:"298", member:true, iconBg:"#fff3e0", iconColor:"#b45309", img:"" },
+      { pub:"LX", pubName:"Luxury Index", author:"Isabelle Moreau", date:"Apr 18", title:"Why the Ultra-Wealthy Are Quietly Moving Money Out of Real Estate", sub:"Three asset classes that are seeing unprecedented inflows from family offices.", claps:"22.8K", comments:"894", member:true, iconBg:"#ffecd1", iconColor:"#7a4300", img:"" },
+      { pub:"GT", pubName:"GrowthTech", author:"Sanjay Menon", date:"Apr 15", title:"The A/B Test That Broke Our Company — And What We Learned", sub:"Optimizing for the wrong metric nearly killed a product millions of people loved.", claps:"16.9K", comments:"613", member:true, iconBg:"#e3f2fd", iconColor:"#0d47a1", img:"" },
+      { pub:"MK", pubName:"Marketing Insider", author:"Rachel Goldstein", date:"Apr 12", title:"Content Marketing Is Dead. Long Live Content Marketing.", sub:"What actually works in 2025 is almost the opposite of what worked in 2020.", claps:"9.5K", comments:"387", member:false, iconBg:"#f1f5f9", iconColor:"#334155", img:"" },
+      { pub:"OP", pubName:"Operations Pro", author:"Kwame Asante", date:"Apr 9", title:"The Ops Framework That Helped Us Scale from 10 to 500 Employees", sub:"Most companies wait too long to build this. We almost did.", claps:"8.1K", comments:"304", member:true, iconBg:"#e8f5e9", iconColor:"#1b5e20", img:"" },
+      { pub:"FL", pubName:"Future of Law", author:"Adaeze Okonkwo", date:"Apr 6", title:"AI Is Already Doing 40% of Legal Research. Lawyers Are Still Pretending It Isn't.", sub:"The legal profession's coming disruption is more profound than most practitioners admit.", claps:"18.3K", comments:"762", member:true, iconBg:"#fce4ec", iconColor:"#880e4f", img:"" },
+      { pub:"IN", pubName:"Investor Notes", author:"Lorenzo Bianchi", date:"Apr 3", title:"The 3 Financial Ratios That Actually Predict Company Success", sub:"Forget P/E ratios. The metrics that matter are hiding in plain sight.", claps:"12.7K", comments:"478", member:true, iconBg:"#e8f4fd", iconColor:"#1a6fa8", img:"" },
+      { pub:"HT", pubName:"HealthTech Review", author:"Dr. Priya Sharma", date:"Mar 31", title:"Wearable Health Data Is About to Transform How Doctors Practice Medicine", sub:"The shift from reactive to predictive healthcare is happening faster than anyone anticipated.", claps:"15.4K", comments:"592", member:true, iconBg:"#d4f0e2", iconColor:"#0a5c37", img:"" },
+      { pub:"FU", pubName:"Future of Work", author:"Carmen Vasquez", date:"Mar 28", title:"The 4-Day Work Week Is Not About Productivity. It's About Power.", sub:"Why the debate is missing the most important point entirely.", claps:"26.1K", comments:"1.1K", member:true, iconBg:"#ede9fe", iconColor:"#4c1d95", img:"" },
+      { pub:"AG", pubName:"AgTech World", author:"Olumide Adeyemi", date:"Mar 25", title:"Vertical Farming Was Supposed to Change the World. What Happened?", sub:"An honest post-mortem on one of the most overhyped sectors in food tech.", claps:"10.8K", comments:"415", member:false, iconBg:"#e8f5e9", iconColor:"#1b5e20", img:"" },
+      { pub:"RS", pubName:"Real Story", author:"Mei-Ling Chen", date:"Mar 22", title:"I Built a $5M Business and Lost It All. Here's the Exact Mistake I Made.", sub:"It wasn't the market. It wasn't the team. It was one decision I made on a Tuesday.", claps:"47.3K", comments:"2.4K", member:true, iconBg:"#ffecd1", iconColor:"#7a4300", img:"" },
+      { pub:"BD", pubName:"Big Data Weekly", author:"Nikolai Petrov", date:"Mar 19", title:"The Data Problem That's Costing Companies Billions — And Nobody Talks About It", sub:"Bad data hygiene is more expensive than any cyberattack. Here's the evidence.", claps:"7.9K", comments:"312", member:true, iconBg:"#f1f5f9", iconColor:"#334155", img:"" },
+      { pub:"SC", pubName:"Social Capital", author:"Aisha Mwangi", date:"Mar 16", title:"Why Your Network Is Making You Worse at Your Job", sub:"The surprising research on how homogeneous connections limit creative thinking.", claps:"13.2K", comments:"519", member:true, iconBg:"#fff3e0", iconColor:"#b45309", img:"" },
+      { pub:"BH", pubName:"Behavioral Health", author:"Dr. Omar Khalid", date:"Mar 13", title:"The Burnout Epidemic Is Being Treated Backwards", sub:"Most interventions target the individual. The research says that's entirely wrong.", claps:"21.6K", comments:"908", member:true, iconBg:"#e3f2fd", iconColor:"#0d47a1", img:"" },
+      { pub:"TR", pubName:"Tech Radar", author:"Yuna Kim", date:"Mar 10", title:"The Open Source Model That's Quietly Replacing Every Enterprise Software Stack", sub:"It started as a side project. Now it's worth more than its proprietary competitors.", claps:"16.5K", comments:"647", member:false, iconBg:"#e8f4fd", iconColor:"#1a6fa8", img:"" },
+      { pub:"NW", pubName:"New Work", author:"Sebastien Blanc", date:"Mar 7", title:"Gen Z Is Rewriting the Rules of Work — And Most Leaders Are Getting It Wrong", sub:"What the data shows about the generation that will define the next 30 years of labor.", claps:"29.7K", comments:"1.3K", member:true, iconBg:"#fce4ec", iconColor:"#880e4f", img:"" },
+      { pub:"IP", pubName:"IP Law Today", author:"Margaret Hughes", date:"Mar 4", title:"AI-Generated Content and Copyright: The Legal Battle That Will Define the Next Decade", sub:"The court cases already in progress will set precedents nobody is prepared for.", claps:"11.4K", comments:"443", member:true, iconBg:"#ede9fe", iconColor:"#4c1d95", img:"" },
+      { pub:"CG", pubName:"Consumer Goods", author:"Raj Patel", date:"Mar 1", title:"Why the World's Best Consumer Brands Are Secretly B2B Companies", sub:"The business model hiding behind every iconic consumer product.", claps:"8.6K", comments:"334", member:false, iconBg:"#d4f0e2", iconColor:"#0a5c37", img:"" },
+      { pub:"MT", pubName:"Media Theory", author:"Francesca Rizzo", date:"Feb 26", title:"Attention Is the Only Currency That Matters — and It's Being Stolen", sub:"A media theorist explains what algorithmic content is actually doing to human cognition.", claps:"34.2K", comments:"1.6K", member:true, iconBg:"#e8f5e9", iconColor:"#1b5e20", img:"" },
+      { pub:"FB", pubName:"Future Business", author:"Hamid Al-Farsi", date:"Feb 23", title:"The Business Model Nobody Can Copy — And Why You Should Build One", sub:"Defensible moats aren't about technology. They're about something much harder to replicate.", claps:"19.1K", comments:"741", member:true, iconBg:"#ffecd1", iconColor:"#7a4300", img:"" },
+    ],
+    "following": [
+      { pub:"AI", pubName:"Artificial Intelligence", author:"Md Zunaid", date:"May 14", title:"Building My First Machine Learning Model as a Fresher", sub:"From CSV files to Random Forest — the real beginner's journey.", claps:"980", comments:"41", member:false, iconBg:"#ede9fe", iconColor:"#4c1d95", img:"" },
+      { pub:"PY", pubName:"Python in Plain English", author:"Rahul Sharma", date:"May 12", title:"Stop Writing Python Like It's 2015", sub:"Modern patterns that make your code clean, fast, and readable.", claps:"1.3K", comments:"67", member:false, iconBg:"#fff3e0", iconColor:"#b45309", img:"" },
+      { pub:"WD", pubName:"Web Dev Weekly", author:"Fatima Al-Hassan", date:"May 10", title:"CSS Grid vs Flexbox: Stop Guessing, Start Knowing", sub:"A practical decision framework — once you get this, layouts become effortless.", claps:"2.7K", comments:"114", member:false, iconBg:"#e3f2fd", iconColor:"#0d47a1", img:"" },
+      { pub:"GH", pubName:"GitHub Stories", author:"Rohan Verma", date:"May 9", title:"I Reviewed 1,000 Pull Requests. Here's What I Learned.", sub:"The patterns that separate good code from great code — and great developers from average ones.", claps:"4.5K", comments:"198", member:true, iconBg:"#f1f5f9", iconColor:"#334155", img:"" },
+      { pub:"OS", pubName:"Open Source Weekly", author:"Chen Xiaoming", date:"May 6", title:"Contributing to Open Source Changed My Career. Here's How to Start.", sub:"You don't need to be a senior dev. You just need to start.", claps:"3.2K", comments:"143", member:false, iconBg:"#e8f5e9", iconColor:"#1b5e20", img:"" },
+      { pub:"RE", pubName:"React Explained", author:"Priya Anand", date:"May 4", title:"React 19 Changes Everything About How We Manage State", sub:"The new compiler, server components, and what it means for your existing codebase.", claps:"5.1K", comments:"227", member:false, iconBg:"#e8f4fd", iconColor:"#1a6fa8", img:"" },
+      { pub:"TS", pubName:"TypeScript Weekly", author:"Andrei Popescu", date:"May 2", title:"TypeScript's Most Underused Feature That Will Simplify Your Entire Codebase", sub:"Template literal types are hiding in plain sight. Here's how to unlock them.", claps:"3.7K", comments:"159", member:false, iconBg:"#ede9fe", iconColor:"#4c1d95", img:"" },
+      { pub:"DV", pubName:"DevOps Diaries", author:"Sana Khan", date:"Apr 30", title:"I Broke Production on My First Day. Here's What I Learned.", sub:"A junior engineer's honest account of their most terrifying — and educational — mistake.", claps:"8.4K", comments:"362", member:false, iconBg:"#fce4ec", iconColor:"#880e4f", img:"" },
+      { pub:"DB", pubName:"Database Digest", author:"Kofi Mensah", date:"Apr 28", title:"PostgreSQL vs MongoDB in 2025: The Honest Comparison", sub:"After years of building with both, here's what nobody in the tutorials tells you.", claps:"6.2K", comments:"271", member:true, iconBg:"#fff3e0", iconColor:"#b45309", img:"" },
+      { pub:"AP", pubName:"API Patterns", author:"Lucia Ferreira", date:"Apr 26", title:"REST Is Not Enough. Here's Why GraphQL and gRPC Are Taking Over.", sub:"A practical guide to choosing the right API architecture for your use case.", claps:"4.8K", comments:"208", member:false, iconBg:"#d4f0e2", iconColor:"#0a5c37", img:"" },
+      { pub:"DC", pubName:"Dev Culture", author:"James Obi", date:"Apr 24", title:"The Senior Developer Mindset: What Changes When You Stop Writing Code All Day", sub:"The transition from IC to tech lead is harder than anyone prepares you for.", claps:"9.1K", comments:"394", member:true, iconBg:"#f1f5f9", iconColor:"#334155", img:"" },
+      { pub:"FR", pubName:"Frontend React", author:"Yui Yoshida", date:"Apr 22", title:"I Rebuilt Our App Without Redux. Here's What I'd Do Differently.", sub:"State management in 2025 looks nothing like it did in 2020. Here's the new landscape.", claps:"5.9K", comments:"247", member:false, iconBg:"#e3f2fd", iconColor:"#0d47a1", img:"" },
+      { pub:"ND", pubName:"Node Deep Dive", author:"Ibrahim Hassan", date:"Apr 20", title:"Node.js Performance Secrets That Senior Devs Don't Write About", sub:"The event loop, memory leaks, and the profiling tools that will change how you debug.", claps:"7.3K", comments:"311", member:false, iconBg:"#e8f5e9", iconColor:"#1b5e20", img:"" },
+      { pub:"CS", pubName:"CS Fundamentals", author:"Mei Chen", date:"Apr 18", title:"Big O Notation Finally Explained Without the Math Anxiety", sub:"A visual, intuitive guide to algorithm complexity for every level of developer.", claps:"11.2K", comments:"498", member:true, iconBg:"#ffecd1", iconColor:"#7a4300", img:"" },
+      { pub:"GT", pubName:"Git & Tools", author:"Aleksander Nowak", date:"Apr 16", title:"The Git Commands That Will Save You From Every Merge Nightmare", sub:"Rebase, cherry-pick, and the interactive stash: a practical survival guide.", claps:"8.7K", comments:"374", member:false, iconBg:"#e8f4fd", iconColor:"#1a6fa8", img:"" },
+      { pub:"DZ", pubName:"DevZone", author:"Nkechi Okafor", date:"Apr 14", title:"Docker in Plain English: From Zero to Production in One Weekend", sub:"No jargon. No assumed knowledge. Just containers, images, and compose files that work.", claps:"6.4K", comments:"284", member:false, iconBg:"#ede9fe", iconColor:"#4c1d95", img:"" },
+      { pub:"SW", pubName:"Software Wisdom", author:"Brendan Callahan", date:"Apr 12", title:"Clean Code Is Overrated. Here's What Actually Matters.", sub:"After 20 years of software engineering, I've changed my mind about what makes good code.", claps:"15.8K", comments:"672", member:true, iconBg:"#fff3e0", iconColor:"#b45309", img:"" },
+      { pub:"ML", pubName:"ML Engineering", author:"Divya Krishnan", date:"Apr 10", title:"Fine-Tuning LLMs Is Harder Than Every Tutorial Pretends", sub:"The gap between demo and production is enormous. Here's what's hiding in it.", claps:"9.4K", comments:"398", member:true, iconBg:"#fce4ec", iconColor:"#880e4f", img:"" },
+      { pub:"SE", pubName:"Security Engineering", author:"Aaron Goldberg", date:"Apr 8", title:"The OWASP Top 10 for 2025: What Changed and Why It Matters", sub:"New attack vectors, updated priorities, and the vulnerabilities that sneak past every scanner.", claps:"7.8K", comments:"327", member:false, iconBg:"#e3f2fd", iconColor:"#0d47a1", img:"" },
+      { pub:"CD", pubName:"Cloud Dev", author:"Sunita Patel", date:"Apr 6", title:"AWS vs Azure vs GCP: The Honest 2025 Comparison From Someone Who Uses All Three", sub:"Cost, DX, reliability, and the vendor lock-in traps each one hides.", claps:"12.1K", comments:"512", member:true, iconBg:"#e8f5e9", iconColor:"#1b5e20", img:"" },
+      { pub:"VE", pubName:"Vue Explained", author:"Thierry Martin", date:"Apr 4", title:"Vue 4 Is Coming — And It's Going to Make React Developers Nervous", sub:"A feature-by-feature breakdown of what the Vue team has been quietly building.", claps:"4.3K", comments:"189", member:false, iconBg:"#d4f0e2", iconColor:"#0a5c37", img:"" },
+      { pub:"NX", pubName:"Next.js Notions", author:"Aisha Osei", date:"Apr 2", title:"App Router vs Pages Router: Which Should You Use in 2025?", sub:"The honest answer after building production apps with both.", claps:"5.6K", comments:"238", member:false, iconBg:"#f1f5f9", iconColor:"#334155", img:"" },
+      { pub:"TT", pubName:"Testing Tales", author:"Ravi Subramanian", date:"Mar 31", title:"I Stopped Writing Unit Tests and My Code Quality Improved", sub:"The controversial case for integration-first testing in modern web development.", claps:"18.3K", comments:"847", member:true, iconBg:"#ffecd1", iconColor:"#7a4300", img:"" },
+      { pub:"AR", pubName:"Algorithms & Rust", author:"Katarzyna Wisniewska", date:"Mar 29", title:"Rust Is Not Hard. The Way It's Taught Is Hard.", sub:"A complete beginner's guide to ownership and borrowing without the cognitive overload.", claps:"8.9K", comments:"376", member:false, iconBg:"#e8f4fd", iconColor:"#1a6fa8", img:"" },
+      { pub:"FE", pubName:"Full Stack Edge", author:"Oluwaseun Adebayo", date:"Mar 27", title:"The Full-Stack Developer's Survival Guide for 2025", sub:"What to learn, what to ignore, and the roadmap that actually leads to employment.", claps:"14.6K", comments:"621", member:true, iconBg:"#ede9fe", iconColor:"#4c1d95", img:"" },
+    ]
+  };
+
+  const sampleStoryTemplates = [
+    { pub: "PG", pubName: "Personal Growth", author: "Thomas Oppong", title: "10 Things You Should Upgrade, Once You Get Money", sub: "The first investments successful people make after earning more.", date: "Jun 4", member: true },
+    { pub: "DS", pubName: "Data Science Collective", author: "Anubhav", title: "The Psychology of Men Who Treat Their Birthday Like a Normal Day", sub: "I recently received a short video in which a young woman smiles into the camera.", date: "Apr 16", member: true },
+    { pub: "UX", pubName: "UX Planet", author: "Nick Babich", title: "Claude Skills: Death to Manual Exploratory Data Analysis", sub: "How continuous Claude skill iteration made manual EDA obsolete.", date: "Apr 6", member: false },
+    { pub: "EQ", pubName: "Equality", author: "LGWare, The Black Lens", title: "MCP is Dead", sub: "Why you should avoid using MCP in Claude Code and what to use instead.", date: "Apr 8", member: false },
+    { pub: "TA", pubName: "Towards AI", author: "Irene Markelic, PhD", title: "12 AI Books Worth Reading in 2026 — If You Actually Build Things", sub: "An engineer-first reading guide for agents, LLM systems, RAG, evals, and production reliability.", date: "May 3", member: true },
+    { pub: "IL", pubName: "ILLUMINATION", author: "Sufyan Maan, M.Eng", title: "Linear Regression: When it feels complicated, you’re probably reading a stats book", sub: "How machine learning and statistics see the same model differently.", date: "Apr 4", member: false },
+    { pub: "EG", pubName: "The Evil Geek", author: "The Evil Geek", title: "I Woke Up at 4:30 AM Every Day for 30 Days — Here Is What Nobody Tells You", sub: "Here is what actually happened, from someone who did it & tracked everything.", date: "Apr 14", member: false },
+    { pub: "WC", pubName: "Write A Catalyst", author: "The Curious Finance Girl", title: "Here’s Why Everyone Is Ditching Spotify These Days — And You Should Too", sub: "I gave Spotify another chance… Big mistake!", date: "Mar 15", member: false },
+    { pub: "UL", pubName: "The Useful Life", author: "Raja Sekar", title: "LLMs, RAG, Agents, MCP: The AI Evolution You Must Know (A Visual Explanation)", sub: "AI evolved from a chatbot to a system. Here’s the full story nobody tells you.", date: "Mar 2", member: false },
+    { pub: "NT", pubName: "No Time", author: "Pranit naik", title: "If You Understand These 5 AI Terms, You’re Ahead of 90% of People", sub: "Master the core ideas behind AI without getting lost.", date: "Apr 18", member: true },
+    { pub: "TA", pubName: "Towards AI", author: "Divy Yadav", title: "The Last Time This Happened, Lots of Regular People Became Millionaires", sub: "How a historic wave of money is about to change everything.", date: "May 7", member: true },
+    { pub: "DS", pubName: "Data Science Collective", author: "Marina Wyss", title: "If You Can Only Read A Few Books This Year, Read These 10", sub: "They aren’t Atomic Habits or The Psychology of Money.", date: "Feb 23", member: true },
+    { pub: "TA", pubName: "Towards AI", author: "Shreyas Naphad", title: "Should You Still Learn to Code in 2026?", sub: "The answer isn’t as obvious as I used to believe.", date: "Mar 29", member: false },
+    { pub: "PG", pubName: "Personal Growth", author: "Neil Blyth", title: "The First Investments Successful People Make After Earning More", sub: "A second look at what high earners actually buy first.", date: "Feb 18", member: false }
+  ];
+
+  function createPlaceholderArticle(index) {
+    const template = sampleStoryTemplates[(index - 1) % sampleStoryTemplates.length];
+    const round = Math.floor((index - 1) / sampleStoryTemplates.length) + 1;
+    const cycleSuffix = round > 1 ? ` — Part ${round}` : "";
+    const day = ((index - 1) % 28) + 1;
+    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const date = `${months[(index - 1) % months.length]} ${day}`;
+    return {
+      pub: template.pub,
+      pubName: template.pubName,
+      author: template.author,
+      date,
+      title: `${template.title}${cycleSuffix}`,
+      sub: template.sub,
+      claps: `${Math.floor(3 + (index % 40) * 0.45)}K`,
+      comments: `${Math.floor(6 + index % 24)}`,
+      member: template.member,
+      iconBg: ["#e8f4fd", "#d4f0e2", "#fff3e0", "#ede9fe"][index % 4],
+      iconColor: ["#1a6fa8", "#0a5c37", "#b45309", "#4c1d95"][index % 4],
+      img: ""
+    };
+  }
+
+  function addPlaceholderArticles(count) {
+    const start = DB["for-you"].length + 1;
+    for (let i = 0; i < count; i++) {
+      DB["for-you"].push(createPlaceholderArticle(start + i));
+    }
+  }
+
+  addPlaceholderArticles(200);
+
+  function autoImage(a) {
+    return a.img || "https://picsum.photos/300/200?random=" + Math.floor(Math.random() * 99999);
+  }
+
+  Object.values(DB).forEach(list => list.forEach(a => { a.img = autoImage(a); }));
+
+  let currentTab = "for-you";
+  let bookmarks = new Set();
+  let currentCoverDataUrl = "";
+
+  function switchTab(tab, el) {
+    currentTab = tab;
+    document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+    el.classList.add("active");
+    document.getElementById("search-input").value = "";
+    renderFeed(DB[tab]);
+  }
+
+  function filterFeed() {
+    const q = document.getElementById("search-input").value.toLowerCase().trim();
+    const list = DB[currentTab] || [];
+    if (!q) { renderFeed(list); return; }
+    renderFeed(list.filter(a =>
+      a.title.toLowerCase().includes(q) ||
+      a.sub.toLowerCase().includes(q) ||
+      a.author.toLowerCase().includes(q) ||
+      a.pubName.toLowerCase().includes(q)
+    ));
+  }
+
+  function renderFeed(list) {
+    list = list.slice(0, 100);     // <= limit to 100
+    const feed = document.getElementById("articles-feed");
+    if (!list || !list.length) {
+      feed.innerHTML = `<div class="empty-state">No stories found matching your search.</div>`;
+      return;
+    }
+    feed.innerHTML = list.map((a, i) => `
+      <article class="article">
+        <div>
+          <div class="pub-row">
+            <div class="pub-icon" style="background:${a.iconBg};color:${a.iconColor};">${a.pub}</div>
+            <span class="pub-text">In <b>${a.pubName}</b> &nbsp;·&nbsp; by ${a.author} &nbsp;·&nbsp; ${a.date}</span>
+          </div>
+          <div class="art-title" onclick="openArticle('${a.title.replace(/'/g,"&#39;")}')">${a.title}</div>
+          <div class="art-sub">${a.sub}</div>
+          <div class="art-footer">
+            ${a.member ? '<span class="member-star">★</span>' : ''}
+            <span class="art-stat">
+              <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14z"/><path d="M7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>
+              ${a.claps}
+            </span>
+            <span class="art-stat">
+              <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+              ${a.comments}
+            </span>
+            <div class="art-actions">
+              <button class="icon-btn" title="Bookmark" onclick="toggleBookmark(${i}, this)">
+                <svg width="17" height="17" fill="${bookmarks.has(currentTab+'-'+i) ? 'currentColor' : 'none'}" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="m19 21-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/></svg>
+              </button>
+              <button class="icon-btn" title="More options">
+                <svg width="17" height="17" fill="currentColor" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="art-thumb">
+          ${`<img src="${autoImage(a)}" alt="Cover" />`}
+        </div>
+      </article>
+    `).join("");
+  }
+
+  function toggleBookmark(i, btn) {
+    const key = currentTab + '-' + i;
+    const svg = btn.querySelector('svg');
+    if (bookmarks.has(key)) {
+      bookmarks.delete(key);
+      svg.setAttribute('fill','none');
+      showToast("Removed from saved stories");
+    } else {
+      bookmarks.add(key);
+      svg.setAttribute('fill','currentColor');
+      showToast("Saved to your list");
+    }
+  }
+
+  function openArticle(title) {
+    showToast("Opening: " + title.substring(0,40) + "...");
+  }
+
+  // ── IMAGE UPLOAD ──
+  function handleImageUpload(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      currentCoverDataUrl = e.target.result;
+      document.getElementById("cover-img").src = currentCoverDataUrl;
+      document.getElementById("cover-preview").style.display = "block";
+      document.getElementById("img-hint").textContent = file.name;
+    };
+    reader.readAsDataURL(file);
+  }
+  function removeCover() {
+    currentCoverDataUrl = "";
+    document.getElementById("cover-img").src = "";
+    document.getElementById("cover-preview").style.display = "none";
+    document.getElementById("img-hint").textContent = "JPG, PNG, GIF supported";
+    document.getElementById("img-file-input").value = "";
+  }
+
+  // ── COMPOSE ──
+  function openCompose() {
+    document.getElementById("compose-overlay").classList.add("open");
+    document.getElementById("compose-title").focus();
+  }
+  function closeCompose() {
+    document.getElementById("compose-overlay").classList.remove("open");
+  }
+  function updateWordCount() {
+    const text = document.getElementById("compose-body").value.trim();
+    const words = text ? text.split(/\s+/).length : 0;
+    document.getElementById("word-count").textContent = words + " word" + (words !== 1 ? "s" : "");
+  }
+  function publishStory() {
+    const title = document.getElementById("compose-title").value.trim();
+    const body = document.getElementById("compose-body").value.trim();
+    if (!title || !body) { showToast("Please add a title and story before publishing."); return; }
+    DB["for-you"].unshift({
+      pub:"MZ", pubName:"Your Stories", author:"Md Zunaid", date:"Today",
+      title, sub: body.substring(0, 120) + (body.length > 120 ? "..." : ""),
+      claps:"0", comments:"0", member:false,
+      iconBg:"#d4f0e2", iconColor:"#0a5c37",
+      img: currentCoverDataUrl
+    });
+    document.getElementById("compose-title").value = "";
+    document.getElementById("compose-body").value = "";
+    document.getElementById("word-count").textContent = "0 words";
+    removeCover();
+    closeCompose();
+    currentTab = "for-you";
+    document.querySelectorAll(".tab").forEach((t,i) => t.classList.toggle("active", i===0));
+    renderFeed(DB["for-you"]);
+    showToast("Story published successfully!");
+  }
+  function saveDraft() {
+    const title = document.getElementById("compose-title").value.trim() || "Untitled story";
+    closeCompose();
+    showToast("Draft saved: \"" + title.substring(0,30) + "\"");
+  }
+
+  // ── TOAST ──
+  function showToast(msg) {
+    const t = document.getElementById("toast");
+    t.textContent = msg;
+    t.classList.add("show");
+    setTimeout(() => t.classList.remove("show"), 2800);
+  }
+
+  // Init
+  renderFeed(DB["for-you"]);
+</script>
+</body>
+</html>
