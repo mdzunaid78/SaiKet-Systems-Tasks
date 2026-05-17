@@ -1,0 +1,195 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 4 0 R /Resources << /Font << /F1 5 0 R /F2 6 0 R >> >> >>
+endobj
+4 0 obj
+<< /Length 4500 >>
+stream
+BT
+/F1 20 Tf
+50 750 Td
+(Task6: Interactive Wikipedia App) Tj
+ET
+BT
+/F2 11 Tf
+50 720 Td
+(HTML, CSS, and JavaScript Application) Tj
+ET
+BT
+/F2 10 Tf
+50 700 Td
+(Repository: mdzunaid78/SaiKet-Systems-Tasks) Tj
+ET
+BT
+/F1 14 Tf
+50 670 Td
+(Overview) Tj
+ET
+BT
+/F2 10 Tf
+50 650 Td
+(This is an interactive Wikipedia clone built with vanilla HTML, CSS, and JavaScript.) Tj
+ET
+BT
+/F2 10 Tf
+50 635 Td
+(Features include search functionality, article viewing, and a responsive design.) Tj
+ET
+BT
+/F1 14 Tf
+50 600 Td
+(Key Features) Tj
+ET
+BT
+/F2 10 Tf
+50 580 Td
+(1. Search Functionality - Query Wikipedia articles via API) Tj
+ET
+BT
+/F2 10 Tf
+50 565 Td
+(2. Article Display - View full article content with formatting) Tj
+ET
+BT
+/F2 10 Tf
+50 550 Td
+(3. Table of Contents - Auto-generated from article headings) Tj
+ET
+BT
+/F2 10 Tf
+50 535 Td
+(4. Responsive Design - Works on desktop and mobile devices) Tj
+ET
+BT
+/F2 10 Tf
+50 520 Td
+(5. Loading States - Smooth loading indicators during API calls) Tj
+ET
+BT
+/F2 10 Tf
+50 505 Td
+(6. Error Handling - Graceful error messages for connectivity issues) Tj
+ET
+BT
+/F1 14 Tf
+50 470 Td
+(Technical Stack) Tj
+ET
+BT
+/F2 10 Tf
+50 450 Td
+(Language: HTML5 with embedded CSS and JavaScript) Tj
+ET
+BT
+/F2 10 Tf
+50 435 Td
+(APIs: Wikipedia REST API (action=query, list=search)) Tj
+ET
+BT
+/F2 10 Tf
+50 420 Td
+(Fonts: Linux Libertine (serif) and Source Sans 3 (sans-serif)) Tj
+ET
+BT
+/F2 10 Tf
+50 405 Td
+(Styling: Custom CSS with CSS Variables for theming) Tj
+ET
+BT
+/F1 14 Tf
+50 370 Td
+(Color Scheme) Tj
+ET
+BT
+/F2 10 Tf
+50 350 Td
+(Background: #f8f9fa (light gray)) Tj
+ET
+BT
+/F2 10 Tf
+50 335 Td
+(Surface: #ffffff (white)) Tj
+ET
+BT
+/F2 10 Tf
+50 320 Td
+(Accent: #3366cc (Wikipedia blue)) Tj
+ET
+BT
+/F2 10 Tf
+50 305 Td
+(Text: #202122 (dark gray)) Aj
+ET
+BT
+/F2 10 Tf
+50 290 Td
+(Border: #a2a9b1 (medium gray)) Tj
+ET
+BT
+/F1 14 Tf
+50 255 Td
+(Core Functionality) Tj
+ET
+BT
+/F2 10 Tf
+50 235 Td
+(Search: User enters query -> API call -> Results displayed) Tj
+ET
+BT
+/F2 10 Tf
+50 220 Td
+(Article Load: User clicks result -> Full article fetched -> Rendered) Tj
+ET
+BT
+/F2 10 Tf
+50 205 Td
+(Navigation: Home -> Search -> Results -> Article views) Tj
+ET
+BT
+/F2 10 Tf
+50 190 Td
+(TOC Generation: Extracts h2 headings and creates linked list) Tj
+ET
+BT
+/F1 14 Tf
+50 155 Td
+(Responsive Breakpoints) Tj
+ET
+BT
+/F2 10 Tf
+50 135 Td
+(Desktop: Article with sidebar layout (grid: 1fr 240px)) Tj
+ET
+BT
+/F2 10 Tf
+50 120 Td
+(Mobile (max-width: 700px): Single column, sidebar hidden) Tj
+ET
+endstream
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
+endobj
+6 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+xref
+0 7
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000260 00000 n 
+0000004808 00000 n 
+0000004887 00000 n 
+trailer
+<< /Size 7 /Root 1 0 R >>
+startxref
+4966
+%%EOF
